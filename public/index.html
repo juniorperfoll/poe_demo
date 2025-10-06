@@ -1,0 +1,75 @@
+<!-- public/index.html -->
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Demo — Aplicação Orientada a Eventos</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 24px; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .card { border: 1px solid #ddd; border-radius: 12px; padding: 16px; }
+    h2 { margin-top: 0; }
+    .row { display: flex; align-items: center; gap: 8px; margin: 8px 0; }
+    .state { font-size: 18px; }
+    .badge { padding: 4px 8px; border-radius: 8px; background: #f2f2f2; display: inline-block; }
+    .timer { font-variant-numeric: tabular-nums; font-weight: 600; }
+    .muted { color: #666; font-size: 12px; }
+    button { padding: 8px 12px; border: 0; border-radius: 8px; cursor: pointer; }
+    button.primary { background: #4B0082; color: #fff; }
+    button.secondary { background: #eee; }
+    input[type="number"] { width: 80px; padding: 6px 8px; }
+  </style>
+</head>
+<body>
+  <h1>Aplicação Orientada a Eventos — Demo</h1>
+  <p class="muted">Fluxo: <strong>admin.start</strong> → <strong>client.reserve</strong> → <strong>reservation.expired/purchase.confirmed</strong> → <strong>system.sync</strong>.</p>
+
+  <div class="grid">
+    <div class="card">
+      <h2>Administrador</h2>
+      <div class="row">
+        <label>Total de itens:</label>
+        <input id="total" type="number" min="1" value="20">
+        <button id="btnStart" class="primary">Iniciar</button>
+      </div>
+      <p class="muted">Para a demo, qualquer cliente pode clicar em Iniciar.</p>
+    </div>
+
+    <div class="card">
+      <h2>Participante</h2>
+      <div class="row">
+        <label>Quantidade:</label>
+        <input id="qty" type="number" min="1" max="10" value="1">
+      </div>
+      <div class="row">
+        <label>Reserva (segundos):</label>
+        <input id="seconds" type="number" min="5" max="120" value="20">
+      </div>
+      <div class="row">
+        <button id="btnReserve" class="primary">Reservar</button>
+        <button id="btnPurchase" class="secondary">Comprar</button>
+        <button id="btnCancel" class="secondary">Cancelar</button>
+      </div>
+      <p>Minha reserva: <span id="myHold" class="badge">nenhuma</span> — expira em: <span id="countdown" class="timer">–</span></p>
+      <p id="msg" class="muted"></p>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:24px;">
+    <h2>Estado Global (tempo real)</h2>
+    <p class="state">
+      Iniciado: <strong id="started">false</strong> •
+      Total: <strong id="totalS">0</strong> •
+      Disponível: <strong id="available">0</strong> •
+      Reservado: <strong id="reserved">0</strong> •
+      Vendido: <strong id="sold">0</strong>
+    </p>
+    <p id="status" class="muted"></p>
+  </div>
+
+  <!-- Cliente Socket.IO exposto pelo servidor -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
